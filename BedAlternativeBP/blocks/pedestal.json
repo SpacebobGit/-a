@@ -1,0 +1,121 @@
+{
+	"format_version": "1.18.0",
+	"minecraft:block": {
+		"description": {
+			"identifier": "block:pedestal",
+			"register_to_creative_menu": true,
+            "properties": {
+                "dbrt:rotation":[0, 1, 2, 3]
+            }
+		},
+		"components": {
+			"minecraft:on_interact": {
+				"event": "destroyed"
+			},
+			"minecraft:on_placed": {
+				"event": "placed"
+			},
+			"minecraft:on_player_destroyed": {
+				"event": "destroyed"
+			},
+            "minecraft:on_player_placing": {
+                "event": "rotation"
+            },
+			"minecraft:material_instances": {
+				"*": {
+					"texture": "pedestal",
+					"render_method": "alpha_test"
+				}
+			},
+			"minecraft:geometry": "geometry.pedestal",
+			"minecraft:entity_collision": {
+				"origin": [
+					-8,
+					0,
+					-8
+				],
+				"size": [
+					16,
+					16,
+					16
+				]
+			},
+			"minecraft:pick_collision": {
+				"origin": [
+					-8,
+					0,
+					-8
+				],
+				"size": [
+					16,
+					16,
+					16
+				]
+			},
+			"minecraft:block_light_absorption": 1
+		},
+        "permutations":[
+            {
+                "condition":"query.block_property('dbrt:rotation') == 0",
+                "components":{
+                    "minecraft:rotation": [0, 0, 0]
+                }
+            },
+            {
+                "condition":"query.block_property('dbrt:rotation') == 1",
+                "components":{
+                    "minecraft:rotation": [0, 180, 0]
+                }
+            },
+            {
+                "condition":"query.block_property('dbrt:rotation') == 2",
+                "components":{
+                    "minecraft:rotation": [0, 90, 0]
+                }
+            },
+            {
+                "condition":"query.block_property('dbrt:rotation') == 3",
+                "components":{
+                    "minecraft:rotation": [0, -90, 0]
+                }
+            }
+        ],
+		"events": {
+			"pass_night": {
+				"run_command": {
+					"command": [
+						"say hey",
+						"kill @e[r=2,type=minecart]",
+						"scoreboard players set @e timer 500",
+						"spawnpoint @s ~ ~ ~",
+						"weather clear",
+						"time set sunrise",
+						"particle minecraft:villager_happy ~ ~0.5 ~",
+						"playsound random.orb @s"
+					]
+				}
+			},
+			"placed": {
+				"run_command": {
+					"command": [
+						"say Placed",
+						"summon minecart"
+					]
+				}
+			},
+			"destroyed": {
+				"run_command": {
+					"command": [
+						"say hey",
+						"kill @e[r=2,type=minecart]"
+					]
+				}
+			},
+            "rotation":{
+                "set_block_property": {
+                    "dbrt:rotation": "query.cardinal_facing_2d == 6 ? 0 : query.cardinal_facing_2d - 2"
+                }
+            }
+		}
+	}
+}
